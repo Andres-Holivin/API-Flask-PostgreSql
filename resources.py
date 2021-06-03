@@ -74,7 +74,7 @@ class UserLogoutAccess(Resource):
 #         jti=get_jwt()['jti']
 #         try:
 #             revoked_token=RevokedModel(jti=jti)
-#             return {'message':'Access tokenhas been revoked'}
+#             return {'message':'Access token has been revoked'}
 #         except Exception as e:
 #             return {'message':e},500
       
