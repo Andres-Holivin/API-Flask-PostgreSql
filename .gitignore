@@ -1,8 +1,4 @@
-__pycache__/
-.scripts
-.venv
-
-  
+__pycache__/  
 .DS_Store
 *.pyc
 *.pyo
@@ -21,3 +17,4 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
+scripts
