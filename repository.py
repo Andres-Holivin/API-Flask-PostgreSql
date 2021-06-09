@@ -1,5 +1,5 @@
 from models import *
-from run import db
+from app import db
 from passlib.hash import pbkdf2_sha256 as sha256
 from Schema import *
 from flask import jsonify

@@ -1,4 +1,4 @@
-from run import db
+from app import db
 from sqlalchemy import Table, Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 class UserModel(db.Model):

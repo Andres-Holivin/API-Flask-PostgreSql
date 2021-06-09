@@ -1,6 +1,6 @@
 from marshmallow_sqlalchemy import load_instance_mixin
 from marshmallow_sqlalchemy.fields import Nested
-from run import *
+from app import *
 from models import *
 
 class ForumReplaySchema(ma.SQLAlchemyAutoSchema):
