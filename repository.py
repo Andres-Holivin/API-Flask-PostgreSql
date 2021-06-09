@@ -1,6 +1,8 @@
-from models import UserModel,RevokedModel,CategoryModel
+from models import *
 from run import db
 from passlib.hash import pbkdf2_sha256 as sha256
+from Schema import *
+from flask import jsonify
 class RepositoryUser():
     def seve_to_db(UserModel):
         db.session.add(UserModel)
@@ -9,6 +11,7 @@ class RepositoryUser():
         def to_json(UserModel):
             return{
                 'userid':UserModel.userid,
+                'userimgurl':UserModel.userimgurl,
                 'name':UserModel.name,
                 'username':UserModel.username,
                 'email':UserModel.email,
@@ -24,7 +27,8 @@ class RepositoryUser():
         return sha256.hash(password)
     def verify_hash(password,hash):
         return sha256.verify(password,hash)
-
+    def get_name_by_id(UserId):        
+        return [{'name':a.name} for a in UserModel.query.with_entities(UserModel.name).filter_by(userid=UserId).all()]        
 class RepositoryRevoke():
     def add(revokedModel):
         db.session.add(revokedModel)
@@ -42,3 +46,22 @@ class RepositoryCategory():
                 'categoryimgurl':CategoryModel.categoryimgurl
             }
         return{'userlgamez':list(map(lambda CategoryModel:to_json(CategoryModel),CategoryModel.query.all()))}
+class RepositoryForum():
+    def get_all_forum():        
+        form=ForumThreadSchema()
+        form1=ForumReplaySchema()
+        query=ForumThreadModel.query.all()
+        x=form.dump(query)
+        x=[]
+        for a in range(len(query)):
+            x.append(form.dump(query[a]))        
+        return jsonify({"Forum":x})
+    def get_thread_by_id(ThreadId):
+        thread=ForumThreadModel.query.filter_by(threadid=ThreadId).first()
+        return thread        
+    def insert_forum_thread(ForumThread):
+        db.session.add(ForumThread)
+        db.session.commit()
+    def insert_forum_replay(ForumReplay):
+        db.session.add(ForumReplay)
+        db.session.commit()

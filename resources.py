@@ -1,7 +1,11 @@
+from flask.json import jsonify
 from flask_restful import Resource, reqparse
-from models import CategoryModel, RevokedModel, UserModel
+from sqlalchemy.sql.expression import null
+from models import *
 from datetime import datetime
-from repository import RepositoryUser,RepositoryRevoke,RepositoryCategory
+from repository import *
+import json
+from flask import jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, get_jwt_identity, get_jwt)
 
 parser = reqparse.RequestParser()
@@ -20,6 +24,7 @@ class UserRegistration(Resource):
             new_user=UserModel(
                 name=str(data['Name']),
                 username=str(data['Username']),
+                userimgurl='-',
                 email=str(data['Email']),
                 password=RepositoryUser.generate_hash(str(data['Password'])),
                 dob=datetime.strptime(data['DOB'],'%d/%m/%Y').date(),
@@ -88,7 +93,6 @@ class TokenRefresh(Resource):
 class AllUsers(Resource):
     def get(self):
         return RepositoryUser.return_all()
-
       
 class SecretResource(Resource):
     @jwt_required()
@@ -98,3 +102,39 @@ class SecretResource(Resource):
 class GetAllCategory(Resource):
     def get(self):
         return RepositoryCategory.return_all()
+class GetForum(Resource):
+    def get(self):        
+        return RepositoryForum.get_all_forum()
+class InsertThread(Resource):
+    def post(self):
+        parser.add_argument('UserId',required ="true")
+        parser.add_argument('Title',required ="true")
+        parser.add_argument('Description',required ="true")
+        data=parser.parse_args()
+        User_name=RepositoryUser.get_name_by_id(data['UserId'])
+        thread=ForumThreadModel(
+            userid=int(str(data['UserId'])),
+            title=data['Title'],
+            description=data['Description'],
+            interested=0,
+            create_on=datetime.now(),
+            user_in=User_name[0]['name'],            
+        )
+        return RepositoryForum.insert_forum_thread(thread)
+class InsertReplay(Resource):
+    def post(self):
+        parser.add_argument('ThreadId',required="true")
+        parser.add_argument('UserId',required="true")
+        parser.add_argument('Description',required="true")
+        data=parser.parse_args()
+        User_name=RepositoryUser.get_name_by_id(data['UserId'])
+        thread=RepositoryForum.get_thread_by_id(data['ThreadId'])
+        Replay=ForumReplayModel(
+            # threadid=int(data['ThreadId']),
+            userid=data['UserId'],
+            description=data['Description'],
+            create_on=datetime.now(),
+            user_in=User_name[0]['name'],
+            replayName=thread
+        )
+        return RepositoryForum.insert_forum_replay(Replay)
