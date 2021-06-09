@@ -27,6 +27,7 @@ def check_if_token_in_blacklist(jwt_header, jwt_payload):
 
 import resources
 
+api.add_resource(resources.Home, '/')
 api.add_resource(resources.UserRegistration, '/registration')
 api.add_resource(resources.UserLogin, '/login')
 api.add_resource(resources.UserLogoutAccess, '/logout/access')

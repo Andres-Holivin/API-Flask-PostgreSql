@@ -4,12 +4,14 @@ from sqlalchemy.sql.expression import null
 from models import *
 from datetime import datetime
 from repository import *
-import json
 from flask import jsonify
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, get_jwt_identity, get_jwt)
 
 parser = reqparse.RequestParser()
 
+class Home(Resource):
+    def get(self):
+        return jsonify({"name":"hello"})
 class UserRegistration(Resource):
     def post(self):
         parser.add_argument('Name',required ="true")
