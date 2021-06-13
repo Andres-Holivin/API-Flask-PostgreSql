@@ -56,7 +56,8 @@ class UserLogin(Resource):
         if RepositoryUser.verify_hash(data['Password'],current_user.password):
             access_token=create_access_token(identity=data['Username'])
             # refresh_token=create_refresh_token(identity=data['Username'])
-            return{
+            return{                
+                'userId':current_user.userid,
                 'message':'Login in as {}'.format(current_user.username),
                 'access_token':access_token,
                 # 'refresh_token':refresh_token

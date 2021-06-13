@@ -49,7 +49,6 @@ class RepositoryCategory():
 class RepositoryForum():
     def get_all_forum():        
         form=ForumThreadSchema()
-        form1=ForumReplaySchema()
         query=ForumThreadModel.query.all()
         x=form.dump(query)
         x=[]

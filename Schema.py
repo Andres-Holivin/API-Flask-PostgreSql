@@ -13,4 +13,6 @@ class ForumThreadSchema(ma.SQLAlchemyAutoSchema):
         model=ForumThreadModel    
         # load_instance=True    
     replay=ma.Nested(ForumReplaySchema, many=True)
+
+
     
