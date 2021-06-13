@@ -53,17 +53,20 @@ class UserLogin(Resource):
         current_user=RepositoryUser.find_by_username(data['Username'])
         if not current_user:
             return{"message":"Username {} doesn't exist".format(data['Username'])}
-        if RepositoryUser.verify_hash(data['Password'],current_user.password):
-            access_token=create_access_token(identity=data['Username'])
-            # refresh_token=create_refresh_token(identity=data['Username'])
-            return{                
-                'userId':current_user.userid,
-                'name':current_user.name,
-                'message':'Login in as {}'.format(current_user.username),
-                'access_token':access_token,
-                # 'refresh_token':refresh_token
-                }
-        else:
+        try:
+            if RepositoryUser.verify_hash(data['Password'],current_user.password):
+                access_token=create_access_token(identity=data['Username'])
+                # refresh_token=create_refresh_token(identity=data['Username'])
+                return{                
+                    'userId':current_user.userid,
+                    'name':current_user.name,
+                    'message':'Login in as {}'.format(current_user.username),
+                    'access_token':access_token,
+                    # 'refresh_token':refresh_token
+                    }
+            else:
+                return {'message':'Wrong credentials'}
+        except:
             return {'message':'Wrong credentials'}
       
 class UserLogoutAccess(Resource):
