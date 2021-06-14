@@ -121,8 +121,8 @@ class InsertThread(Resource):
         User_name=RepositoryUser.get_name_by_id(data['UserId'])
         thread=ForumThreadModel(
             userid=int(str(data['UserId'])),
-            title=data['Title'],
-            description=data['Description'],
+            title=str(data['Title']),
+            description=str(data['Description']),
             interested=0,
             create_on=datetime.now(),
             user_in=User_name[0]['name'],            
