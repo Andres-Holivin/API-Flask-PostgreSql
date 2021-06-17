@@ -146,6 +146,7 @@ class InsertReplay(Resource):
         return RepositoryForum.insert_forum_replay(Replay)
 class GetReplay(Resource):
     def get(self):
-        parser.add_argument('ThreadId',required="true")
-        data=parser.parse_args()
-        return RepositoryForum.getReplayById(data['ThreadId'])
+        # parser.add_argument('ThreadId',required="true")
+        # data=parser.parse_args()
+        # return RepositoryForum.getReplayById(data['ThreadId'])
+        return RepositoryForum.getReplayById()
