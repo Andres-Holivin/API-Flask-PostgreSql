@@ -7,6 +7,7 @@ class RepositoryUser():
     def seve_to_db(UserModel):
         db.session.add(UserModel)
         db.session.commit()
+        return "success"
     def return_all():
         def to_json(UserModel):
             return{
@@ -33,6 +34,7 @@ class RepositoryRevoke():
     def add(revokedModel):
         db.session.add(revokedModel)
         db.session.commit()
+        return "success"
     def is_jti_blacklisted(jti):
         query=RevokedModel.query.filter_by(jti=jti).first()
         return bool(query)
@@ -61,6 +63,8 @@ class RepositoryForum():
     def insert_forum_thread(ForumThread):
         db.session.add(ForumThread)
         db.session.commit()
+        return "success"
     def insert_forum_replay(ForumReplay):
         db.session.add(ForumReplay)
         db.session.commit()
+        return "success"
