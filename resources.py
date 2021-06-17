@@ -137,7 +137,6 @@ class InsertReplay(Resource):
         User_name=RepositoryUser.get_name_by_id(data['UserId'])
         thread=RepositoryForum.get_thread_by_id(data['ThreadId'])
         Replay=ForumReplayModel(
-            # threadid=int(data['ThreadId']),
             userid=data['UserId'],
             description=data['Description'],
             create_on=datetime.now(),
