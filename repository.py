@@ -69,7 +69,8 @@ class RepositoryForum():
         db.session.commit()
         return "success"
     def getReplayById(ThreadId):
-        replay=ForumReplayModel.query.filter_by(threadid=ThreadId).all()
+        # replay=ForumReplayModel.query.filter_by(threadid=ThreadId).all()
+        replay=ForumReplayModel.query.all()
         forumReplay=ForumReplaySchema()
         x=[]
         for a in range(len(replay)):
