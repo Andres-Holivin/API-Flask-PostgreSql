@@ -153,18 +153,17 @@ class GetReplay(Resource):
 class GetAllProductSell(Resource):
     def get(self):
         return RepositoryToko.get_all_product_sell()
-class InsertProduct(Resource):
+class InsertProductName(Resource):
     def post(self):
         parser.add_argument('Name',required="true")
         data=parser.parse_args()
-        print(RepositoryToko.find_name_product(data['Name']))
-        if RepositoryToko.find_name_product(data['Name']):
+        if RepositoryToko.find_product_name_by_name(data['Name']):
             return jsonify({"Message":"Nama {} sudah ada di dalam database".format(data['Name'])})
         else:
             Product=ProductNameModel(
                 name=data['Name'],
                 date_in=datetime.now(),
-                ststus='A'
+                status='A'
             )
             return RepositoryToko.insert_product_name(Product)
 
