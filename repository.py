@@ -98,16 +98,16 @@ class RepositoryToko:
         try:
             db.session.add(ProductName)
             db.session.commit()
-            return 'success'
+            return jsonify({"Message":'success'})
         except:
-            return 'error'
+            return jsonify({"Message":'error'})
     def insert_product_sell(ProductSell):
         try:
             db.session.query(ProductStockModel).filter(ProductStockModel.productid==ProductSell.productid)\
             .update({ProductStockModel.jumlah:ProductStockModel.jumlah-ProductSell.terjual})
             db.session.add(ProductSell)
             db.session.commit()
-            return 'success'
+            return jsonify({"Message":'success'})
         except:
             db.session.rollback()
-            return 'error'
+            return jsonify({"Message":'error'})
