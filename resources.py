@@ -11,7 +11,7 @@ parser = reqparse.RequestParser()
 
 class Home(Resource):
     def get(self):
-        return jsonify({"name":"hello"})
+        return jsonify({"name":"aa"})
 class UserRegistration(Resource):
     def post(self):
         parser.add_argument('Name',required ="true")
@@ -149,3 +149,51 @@ class GetReplay(Resource):
         parser.add_argument('Id',required="true")
         data=parser.parse_args()
         return RepositoryForum.getReplayById(data['Id'])
+
+class GetAllProductSell(Resource):
+    def get(self):
+        return RepositoryToko.get_all_product_sell()
+class InsertProduct(Resource):
+    def post(self):
+        parser.add_argument('Name',required="true")
+        data=parser.parse_args()
+        print(RepositoryToko.find_name_product(data['Name']))
+        if RepositoryToko.find_name_product(data['Name']):
+            return jsonify({"Message":"Nama {} sudah ada di dalam database".format(data['Name'])})
+        else:
+            Product=ProductNameModel(
+                name=data['Name'],
+                date_in=datetime.now(),
+                ststus='A'
+            )
+            return RepositoryToko.insert_product_name(Product)
+
+class GetAllProductName(Resource):
+    def get(self):
+        return RepositoryToko.get_all_product_name()
+
+class InsertProductSell(Resource):
+    def post(self):
+        parser.add_argument('ProductId',required='True')
+        parser.add_argument('Terjual',required='True')
+        data=parser.parse_args()
+        productNm=RepositoryToko.find_product_name_by_id(data['ProductId'])
+        if not productNm:
+            return jsonify({"Message":"Product Id : {} tidak ada dalam database".format(data['ProductId'])})
+        product=RepositoryToko.find_product_stock_by_id(data['ProductId'])
+        if not product:
+            return jsonify({"Message":"Product Id : {} tidak mempunyai stock di ada dalam database".format(data['ProductId'])})     
+        if int(product.jumlah)<int(data['Terjual']):
+            return jsonify({"Message":"Product Terjual : {} tidak boleh lebih besar dari Stock :{} yang ada".format(data['Terjual'],int(product.jumlah))})             
+        productSell=ProductSellModel(
+            productid=data['ProductId'],
+            modal=product.modal,
+            harga_jual=product.harga_jual,
+            terjual=data['Terjual'],
+            date_in=datetime.now(),
+            status='A'
+        )
+        return RepositoryToko.insert_product_sell(productSell)
+class GetAllProductStock(Resource):
+    def get(self):
+        return RepositoryToko.get_all_product_stock()
