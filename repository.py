@@ -75,7 +75,7 @@ class RepositoryToko:
     def get_all_product_sell():
         productSell=db.session.\
         query(ProductSellModel.id,ProductSellModel.modal,ProductSellModel.harga_jual,ProductSellModel.terjual,ProductNameModel.name)\
-        .distinct(ProductSellModel.id).join(ProductNameModel,ProductSellModel.productid==ProductNameModel.id).filter(ProductSellModel.status=='A').all()
+        .distinct(ProductSellModel.id).join(ProductNameModel,ProductSellModel.productid==ProductNameModel.id).filter(ProductSellModel.status!='A').all()
         productSellSchemas=ProductSellSchema(many=True)
         return jsonify({"ProductSell":productSellSchemas.dump(productSell)})
     def get_all_product_stock():
