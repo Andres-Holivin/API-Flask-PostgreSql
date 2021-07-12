@@ -176,10 +176,10 @@ class InsertProductSell(Resource):
         parser.add_argument('ProductId',required='True')
         parser.add_argument('Terjual',required='True')
         data=parser.parse_args()
-        productNm=RepositoryToko.find_product_name_by_id(data['ProductId'])
+        productNm=RepositoryToko.find_product_name_by_product_id(data['ProductId'])
         if not productNm:
             return jsonify({"Message":"Product Id : {} tidak ada dalam database".format(data['ProductId'])})
-        product=RepositoryToko.find_product_stock_by_id(data['ProductId'])
+        product=RepositoryToko.find(data['ProductId'])
         if not product:
             return jsonify({"Message":"Product Id : {} tidak mempunyai stock di ada dalam database".format(data['ProductId'])})     
         if int(product.jumlah)<int(data['Terjual']):
@@ -196,3 +196,46 @@ class InsertProductSell(Resource):
 class GetAllProductStock(Resource):
     def get(self):
         return RepositoryToko.get_all_product_stock()
+
+class InsertProductStock(Resource):
+    def post(self):
+        parser.add_argument('ProductId',required='True')
+        parser.add_argument('Modal',required='True')
+        parser.add_argument('HargaJual',required='True')
+        parser.add_argument('BanyakBarang',required='True')
+        data=parser.parse_args()
+        productStock=ProductSellModel(
+            productid=data['ProductId'],
+            modal=data['Modal'],
+            harga_jual=data['HargaJual'],
+            jumlah=data['BanyakBarang'],
+            date_in=datetime.now(),
+            status='A'
+        )
+        return RepositoryToko.insert_product_stock(productStock)
+class DeleteProductStockById(Resource):
+    def delete(self,id):
+        productStock=RepositoryToko.find_product_stock_by_id(id)
+        return RepositoryToko.delete_product_stock_by_id(productStock)
+class DeleteProductStockNameById(Resource):
+    def delete(self,id):
+        productName=RepositoryToko.find_product_name_by_product_id(id)
+        return RepositoryToko.delete_product_name_by_id(productName)
+class UpdateModalProductStockById(Resource):
+    def put(self):
+        parser.add_argument('Id',required='True')
+        parser.add_argument('Modal')
+        parser.add_argument('Harga_Jual')
+        parser.add_argument('Jumlah')
+        data=parser.parse_args()
+        productStock=RepositoryToko.find_product_stock_by_id(data['Id'])
+        newProductStock=ProductStockModel(
+            id=productStock.id,
+            productid=productStock.productid,
+            modal=data['Modal'] if data['Modal'] else productStock.modal,
+            harga_jual=data['Harga_Jual'] if data['Harga_Jual'] else productStock.harga_jual,
+            jumlah=data['Jumlah'] if data['Jumlah'] else productStock.jumlah,
+            date_up=datetime.now(),
+            status='U'
+        )
+        return RepositoryToko.update_product_stock_by_id(newProductStock)

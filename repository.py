@@ -86,10 +86,12 @@ class RepositoryToko:
         return jsonify({"ProductSell":productStockSchemas.dump(productStock)})
     def find_product_name_by_name(ProductName):
         return ProductNameModel.query.filter(func.upper(ProductNameModel.name)==(ProductName.upper())).all()
-    def find_product_name_by_id(ProductId):
+    def find_product_name_by_product_id(ProductId):
         return ProductNameModel.query.filter_by(id=ProductId).first()
-    def find_product_stock_by_id(ProductId):
+    def find_product_stock_by_product_id(ProductId):
         return ProductStockModel.query.filter_by(productid=ProductId).first()
+    def find_product_stock_by_id(Id):
+        return ProductStockModel.query.filter_by(id=Id).first()
     def get_all_product_name():
         productName=ProductNameModel.query.all()
         productNameSchemas=ProductNameSchema(many=True)
@@ -106,6 +108,35 @@ class RepositoryToko:
             db.session.query(ProductStockModel).filter(ProductStockModel.productid==ProductSell.productid)\
             .update({ProductStockModel.jumlah:ProductStockModel.jumlah-ProductSell.terjual})
             db.session.add(ProductSell)
+            db.session.commit()
+            return jsonify({"Message":'success'})
+        except:
+            db.session.rollback()
+            return jsonify({"Message":'error'})
+    def insert_product_stock(ProductStock):
+        try:            
+            db.session.add(ProductStock)
+            db.session.commit()
+            return jsonify({"Message":'success'})
+        except:
+            return jsonify({"Message":'error'})
+    def delete_product_stock_by_id(ProductStock):
+        try:            
+            db.session.delete(ProductStock)
+            db.session.commit()
+            return jsonify({"Message":'success'})
+        except:
+            return jsonify({"Message":'error'})
+    def delete_product_name_by_id(ProductName):
+        try:            
+            db.session.delete(ProductName)
+            db.session.commit()
+            return jsonify({"Message":'success'})
+        except:
+            return jsonify({"Message":'error'})
+    def update_product_stock_by_id(newProductStock):
+        try:
+            db.session.merge(newProductStock)
             db.session.commit()
             return jsonify({"Message":'success'})
         except:
