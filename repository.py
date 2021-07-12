@@ -81,7 +81,7 @@ class RepositoryToko:
     def get_all_product_stock():
         productStock=db.session.\
         query(ProductStockModel.id,ProductStockModel.modal,ProductStockModel.harga_jual,ProductStockModel.jumlah,ProductNameModel.name)\
-        .distinct(ProductStockModel.id).join(ProductNameModel,ProductStockModel.productid==ProductNameModel.id).filter(ProductStockModel.status=='A').all()
+        .distinct(ProductStockModel.id).join(ProductNameModel,ProductStockModel.productid==ProductNameModel.id).filter(ProductStockModel.status!='D').all()
         productStockSchemas=ProductSellSchema(many=True)
         return jsonify({"ProductSell":productStockSchemas.dump(productStock)})
     def find_product_name_by_name(ProductName):
